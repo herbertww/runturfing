@@ -1,0 +1,654 @@
+/* =============================================================================
+   Runturfing — site styles.
+
+   A merge of two directions that were both half right.
+
+   From the original splash: the deep ink ground, the ember and teal accents,
+   mono microtype, numbered section kickers, and type that scales on clamp with
+   tight negative tracking. That is what made it read as considered.
+
+   From the app's neubrutalism (Android/src/utils/theme.ts): square corners,
+   structural borders, and hard offset shadows with zero blur. That is what
+   makes it read as the same product.
+
+   What got dropped from each: the splash's soft glows and 11px radii, which
+   went gauzy on a dark ground; and the app's heavy 3px black outlines, which on
+   dark ink turn into mud. The shadow colour is a token per theme for that
+   reason — pure black offset against a near-black page is invisible.
+   ========================================================================== */
+
+:root {
+  /* Dark is the default here, unlike the app. The map is dark, the hero grid
+     needs a dark ground to sit on, and this is the direction that was liked. */
+  --ground:    #0A1120;
+  --surface:   #121C2E;
+  --surface-2: #16223A;
+  --line:      #2C3E58;
+  --text:      #E8EEF9;
+  --muted:     #8496B2;
+
+  --ember:     #FF6A45;
+  --ember-rgb: 255, 106, 69;
+  --teal:      #35D0C0;
+  --yellow:    #FDC800;
+
+  /* The offset shadow. On dark it is a lifted edge, not a cast shadow. */
+  --shadow-col: #2C3E58;
+  --shadow:    6px 6px 0 var(--shadow-col);
+  --shadow-sm: 4px 4px 0 var(--shadow-col);
+
+  --border: 2px;
+  --maxw: 1120px;
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+}
+
+/* Light is the app's warm paper, where a black hard shadow is correct. */
+@media (prefers-color-scheme: light) {
+  :root {
+    --ground: #F4F0E6; --surface: #FFFFFF; --surface-2: #FBF8F1;
+    --line: #1C293C; --text: #1B2536; --muted: #63605A;
+    --ember: #D8431C; --ember-rgb: 216, 67, 28; --teal: #0F7A6D;
+    --shadow-col: #111111; --border: 3px;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0A1120; --surface: #121C2E; --surface-2: #16223A;
+  --line: #2C3E58; --text: #E8EEF9; --muted: #8496B2;
+  --ember: #FF6A45; --ember-rgb: 255, 106, 69; --teal: #35D0C0;
+  --shadow-col: #2C3E58; --border: 2px;
+}
+:root[data-theme="light"] {
+  --ground: #F4F0E6; --surface: #FFFFFF; --surface-2: #FBF8F1;
+  --line: #1C293C; --text: #1B2536; --muted: #63605A;
+  --ember: #D8431C; --ember-rgb: 216, 67, 28; --teal: #0F7A6D;
+  --shadow-col: #111111; --border: 3px;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--text);
+  font-family: var(--font);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; }
+img, svg { max-width: 100%; }
+:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+.wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 22px; }
+
+/* ── Type ─────────────────────────────────────────────────────────────────── */
+
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.5rem, 7vw, 5rem); font-weight: 800; line-height: 0.98; letter-spacing: -0.035em; }
+h2 { font-size: clamp(1.75rem, 4.2vw, 2.85rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.028em; }
+h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.015em; }
+p  { margin: 0 0 1rem; text-wrap: pretty; }
+
+.lede { font-size: clamp(1.05rem, 2vw, 1.3rem); color: var(--muted); max-width: 58ch; }
+.lede strong { color: var(--text); font-weight: 600; }
+.muted { color: var(--muted); }
+.small { font-size: 0.88rem; }
+.accent { color: var(--ember); }
+
+/* Mono microtype, the tell from the original design. */
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 0.76rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+}
+.eyebrow .dot {
+  width: 7px; height: 7px; background: var(--ember); flex: none;
+  animation: pulse 2.6s ease-out infinite;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(var(--ember-rgb), 0.5); }
+  70%  { box-shadow: 0 0 0 9px rgba(var(--ember-rgb), 0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--ember-rgb), 0); }
+}
+
+/* Section heads. The rule runs out to the edge, which is what keeps the
+   sections feeling ordered rather than piled. Splash still hangs a mono label
+   in .idx; the numbers themselves are gone. */
+.kicker { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+.kicker .idx { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.14em; color: var(--ember); }
+.kicker::after { content: ""; flex: 1; height: 1px; background: var(--line); min-width: 30px; }
+
+/* ── Slabs ────────────────────────────────────────────────────────────────── */
+
+.slab {
+  background: var(--surface);
+  border: var(--border) solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+.slab--flat { box-shadow: none; background: var(--surface-2); }
+/* Ember shadow marks the one block per section that matters most. */
+.slab--lead { box-shadow: 6px 6px 0 var(--ember); }
+.slab--teal { box-shadow: 6px 6px 0 var(--teal); }
+
+.tag {
+  font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--ember);
+}
+.tag--teal { color: var(--teal); }
+/* One word inside a tag, chipped so it survives a skim. Dark ink on yellow,
+   the same pairing as .btn--yellow. */
+.tag-hi { background: var(--yellow); color: #16202F; padding: 1px 6px; }
+
+/* Footnote marker and its note. The note is set off by a rule so the asterisk
+   has somewhere to land inside the same block. */
+.fn { color: var(--ember); font-weight: 700; text-decoration: none; }
+.fn-note {
+  margin-top: 14px !important; padding-top: 12px;
+  border-top: 1px solid var(--line); font-size: 0.79rem;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-size: 0.92rem; font-weight: 800; letter-spacing: 0.05em;
+  text-transform: uppercase; text-decoration: none; white-space: nowrap;
+  padding: 14px 24px;
+  border: var(--border) solid var(--line);
+  background: var(--ember); color: #FFFFFF;
+  box-shadow: var(--shadow);
+  transition: transform 0.09s ease, box-shadow 0.09s ease;
+}
+/* Press drives the slab into its own shadow. Nothing fades, nothing scales. */
+.btn:active { transform: translate(4px, 4px); box-shadow: 1px 1px 0 var(--shadow-col); }
+.btn--ghost { background: transparent; color: var(--text); }
+.btn--yellow { background: var(--yellow); color: #16202F; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .btn { transition: none; }
+  .eyebrow .dot { animation: none; }
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+
+.site-head {
+  position: sticky; top: 0; z-index: 30;
+  background: color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.site-head .wrap { display: flex; align-items: center; gap: 14px; padding-top: 13px; padding-bottom: 13px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; letter-spacing: -0.01em; font-size: 0.98rem; }
+.brand svg { width: 30px; height: 30px; flex: none; }
+
+.site-nav { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.site-nav a {
+  text-decoration: none; font-size: 0.86rem; font-weight: 600;
+  color: var(--muted); padding: 7px 11px; border: var(--border) solid transparent;
+}
+.site-nav a:hover { color: var(--text); }
+/* The current tab is a slab, so the nav reads as tabs rather than as links. */
+.site-nav a[aria-current="page"] {
+  color: var(--text); background: var(--surface);
+  border-color: var(--line); box-shadow: 3px 3px 0 var(--shadow-col);
+}
+@media (max-width: 720px) {
+  .site-head .wrap { gap: 8px; padding-left: 14px; padding-right: 14px; }
+  .brand span:last-child { display: none; }
+  .site-nav a { padding: 7px 9px; font-size: 0.8rem; }
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+/* The hex field, and a vignette that drops it away at the edges so the type
+   never has to fight it. Both are decoration and are aria-hidden. */
+.hero-field { position: absolute; inset: 0; z-index: 0; opacity: 0.5; }
+.hero-field svg { width: 100%; height: 100%; }
+.hero::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 14% 12%, transparent 0%, var(--ground) 74%),
+    linear-gradient(180deg, transparent 40%, var(--ground) 96%);
+}
+/* padding-block, not the shorthand. This element is also a .wrap, and a
+   shorthand here resets the wrap's inline padding to zero, which ran the hero
+   copy flush to the screen edge on narrow viewports. */
+.hero-inner { position: relative; z-index: 2; padding-block: clamp(40px, 6vh, 72px) clamp(48px, 8vh, 88px); }
+/* Display size, not heading size. The headline is the poster: it is meant to
+   run past half the viewport and wrap where it wants, so the copy block gives
+   up its reading width and the line-height closes to near-solid. */
+.hero h1 {
+  margin: 0;
+  font-size: clamp(3.25rem, 12vw, 10.5rem);
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+.hero h1 .claim { color: var(--ember); }
+.hero .lede { margin-top: 30px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 30px; }
+/* The headline runs the full gutter width; the prose keeps its reading measure. */
+.hero-copy { max-width: 100%; }
+.hero .lede, .hero-actions { max-width: 740px; }
+
+
+/* ── Hero shot ────────────────────────────────────────────────────────────── */
+
+/* The photograph is the hero's ground. It fills the band, sits under the hex
+   field and the vignette, and drifts slowly so the crop never quite settles. */
+.hero-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.hero-bg img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transform-origin: 55% 45%;
+  animation: shot-drift 26s ease-in-out infinite alternate;
+}
+/* Knocked back, and desaturated, so the headline reads over any part of it. */
+.hero--flood .hero-bg { opacity: 0.4; filter: grayscale(0.55) contrast(1.05); }
+/* The field is decoration over a photograph now, so it needs less weight. */
+.hero--flood .hero-field { opacity: 0.32; }
+/* A heavier vignette than the un-flooded hero: the type sits on the photo. */
+.hero--flood::after {
+  background:
+    radial-gradient(115% 95% at 12% 14%, transparent 0%, var(--ground) 82%),
+    linear-gradient(180deg, var(--ground) 0%, transparent 26%, transparent 46%, var(--ground) 97%);
+}
+@keyframes shot-drift {
+  from { transform: scale(1.02) translate3d(-1.2%, 0, 0); }
+  to   { transform: scale(1.11) translate3d(1.2%, -1%, 0); }
+}
+
+/* ── The six ──────────────────────────────────────────────────────────────── */
+
+/* ── The reel ─────────────────────────────────────────────────────────────── */
+
+/* Framed like the device shot and the six: same border, same shadow, so it
+   reads as one of the page's objects rather than a video dropped on top of it.
+   240x360 is not arbitrary — it is the height the six-square grid occupied, so
+   swapping one for the other leaves the band exactly as tall as it was. The
+   source is 480 wide, which is 2x for a retina screen at this size. */
+.reel {
+  margin: 0 0 0 auto;
+  width: max-content; max-width: 100%;
+  border: var(--border) solid var(--line);
+  background: var(--surface-2);
+  box-shadow: var(--shadow);
+  padding: 12px;
+}
+.reel video {
+  display: block; width: 240px; max-width: 100%; height: auto;
+  aspect-ratio: 2 / 3; background: #000;
+}
+/* Capped to the video's width, or the caption's one-line max-content would set
+   how wide the frame is and the border would sit far out from the picture. */
+.reel figcaption {
+  max-width: 240px; padding: 12px 2px 2px;
+  font-size: 0.8rem; color: var(--muted);
+}
+.reel figcaption a { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; }
+
+/* .grid--2 is auto-fit at minmax(290px, 1fr), so the band stacks around 640px
+   wide with no breakpoint of its own. Once it does, the reel is no longer in a
+   right-hand column and pushing it right just leaves it hanging off the copy. */
+@media (max-width: 660px) {
+  .reel { margin-left: 0; }
+}
+
+/* Three across, two down, one hairline of ground between them so the block
+   reads as a single object rather than six loose tiles. */
+.six {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 3px; margin: 0; padding: 3px;
+  background: var(--line); box-shadow: var(--shadow);
+  border: var(--border) solid var(--line);
+}
+.six span {
+  aspect-ratio: 1; background-size: cover; background-position: center 20%;
+  background-color: var(--surface-2);
+}
+.six span:nth-child(1) { background-image: url('/faces/r1.webp'); }
+.six span:nth-child(2) { background-image: url('/faces/r2.webp'); }
+.six span:nth-child(3) { background-image: url('/faces/r3.webp'); }
+.six span:nth-child(4) { background-image: url('/faces/r4.webp'); }
+.six span:nth-child(5) { background-image: url('/faces/r5.webp'); }
+.six span:nth-child(6) { background-image: url('/faces/r6.webp'); }
+.six figcaption {
+  grid-column: 1 / -1; padding: 11px 2px 4px;
+  font-family: var(--mono); font-size: 0.62rem; font-weight: 600;
+  letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg img { animation: none; }
+}
+/* Phones need their own ramp. 12vw of a 375px screen lands under the desktop
+   minimum, which would leave the headline at a fifth of the screen on exactly
+   the devices most of this traffic arrives on. */
+@media (max-width: 700px) {
+  .hero h1 { font-size: clamp(3.5rem, 24vw, 7rem); letter-spacing: -0.055em; }
+}
+
+/* A single cited number under the hero, ruled off in teal. */
+.proof {
+  margin-top: 30px; max-width: 580px; padding: 18px 20px;
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-left: 3px solid var(--teal);
+}
+.proof p { margin: 0; font-size: 0.98rem; }
+.proof b { color: var(--teal); }
+.proof .cite { display: block; margin-top: 9px; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+.proof .cite a { text-decoration: underline; text-underline-offset: 3px; }
+.proof .cite a:hover { color: var(--teal); }
+
+/* ── Stat strip ───────────────────────────────────────────────────────────── */
+
+.strip { border-bottom: 1px solid var(--line); }
+.strip-inner { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); }
+.stat { background: var(--ground); padding: 22px; }
+.stat .n {
+  font-family: var(--mono); font-size: clamp(1.4rem, 3vw, 1.95rem); font-weight: 600;
+  letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1.1;
+}
+.stat .n .u { color: var(--ember); }
+.stat .l { margin-top: 8px; font-size: 0.84rem; color: var(--muted); }
+/* The citation sits under its claim, quiet enough that the result reads first
+   but present so the number is never an assertion on its own. */
+.stat .src {
+  display: block; margin-top: 9px;
+  font-family: var(--mono); font-size: 0.63rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted); opacity: 0.7;
+}
+@media (max-width: 780px) { .strip-inner { grid-template-columns: 1fr; } }
+
+/* ── Bands ────────────────────────────────────────────────────────────────── */
+
+.band { padding: clamp(56px, 9vh, 96px) 0; border-bottom: 1px solid var(--line); }
+/* A band flooded with the hero's hex field. The field is absolute, so the wrap
+   inside needs a stacking context of its own to stay above it. */
+.band--field { position: relative; overflow: hidden; background: var(--surface); }
+.band--field .hero-field { opacity: 0.42; }
+.band--field::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(130% 100% at 50% 40%, transparent 0%, var(--surface) 86%),
+    linear-gradient(180deg, var(--surface) 0%, transparent 18%, transparent 84%, var(--surface) 100%);
+}
+.band--field > .wrap { position: relative; z-index: 2; }
+.band--tint { background: var(--surface); }
+.band .intro { color: var(--muted); max-width: 62ch; margin: 0 0 34px; font-size: 1.03rem; }
+
+.grid { display: grid; gap: 18px; }
+.grid--2 { grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+.grid--3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+/* ── Steps ────────────────────────────────────────────────────────────────── */
+
+.step-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; margin-bottom: 14px;
+  border: var(--border) solid var(--line); background: var(--ground);
+  font-family: var(--mono); font-size: 0.9rem; font-weight: 600; color: var(--ember);
+}
+
+/* ── Plate (the map illustration) ─────────────────────────────────────────── */
+
+.plate { border: var(--border) solid var(--line); background: var(--surface-2); box-shadow: var(--shadow); }
+.plate svg { display: block; width: 100%; height: auto; }
+.plate-key { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; font-size: 0.8rem; color: var(--muted); }
+.plate-key span { display: inline-flex; align-items: center; gap: 7px; }
+.plate-key i { width: 11px; height: 11px; border: 1px solid var(--line); display: inline-block; }
+
+/* ── Device ───────────────────────────────────────────────────────────────── */
+
+/* The app screens are light and the page is dark, so the frame carries a light
+   inner edge. Without it the screenshot floats with no boundary. */
+.device {
+  border: var(--border) solid var(--line); background: var(--surface-2);
+  box-shadow: var(--shadow); padding: 12px; width: max-content; max-width: 100%;
+}
+.device img { display: block; width: 320px; max-width: 100%; height: auto; }
+.device-cap { margin-top: 14px; font-size: 0.8rem; color: var(--muted); }
+
+/* ── Pending banner ───────────────────────────────────────────────────────── */
+
+/* Yellow rather than ember: this is a state the build is in, not a claim about
+   the product, and it should not compete with the hero underneath it. */
+.pending {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 9px 16px;
+  background: var(--surface-2); border-bottom: 1px solid var(--line);
+  font-family: var(--mono); font-size: 0.67rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+}
+.pending-dot {
+  width: 7px; height: 7px; flex: none; background: var(--yellow);
+  animation: pulse-pending 2.6s ease-out infinite;
+}
+@keyframes pulse-pending {
+  0%   { box-shadow: 0 0 0 0 rgba(253, 200, 0, 0.45); }
+  70%  { box-shadow: 0 0 0 9px rgba(253, 200, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(253, 200, 0, 0); }
+}
+
+/* ── Glitch ───────────────────────────────────────────────────────────────── */
+
+/* Two coloured copies of the line, clipped to nothing for most of the cycle.
+   They cut in for a few frames near the end, so the hero reads as type that
+   occasionally tears rather than type that is permanently broken. */
+.glitch { position: relative; display: inline-block; }
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute; left: 0; top: 0; width: 100%;
+  pointer-events: none; opacity: 0;
+}
+.glitch::before { color: var(--teal);  animation: glitch-a 4.6s steps(1, end) infinite; }
+.glitch::after  { color: var(--ember); animation: glitch-b 4.6s steps(1, end) infinite; }
+/* On the ember line the ember copy would be invisible, so it splits to yellow. */
+.glitch.claim::after { color: var(--yellow); }
+
+@keyframes glitch-a {
+  0%, 85%, 94%, 100% { opacity: 0; }
+  86% { opacity: 1; transform: translate(-4px, -1px); clip-path: inset(6%  0 78% 0); }
+  88% { opacity: 1; transform: translate(3px,  1px);  clip-path: inset(63% 0 22% 0); }
+  90% { opacity: 1; transform: translate(-2px, 0);    clip-path: inset(36% 0 50% 0); }
+  92% { opacity: 1; transform: translate(1px, -1px);  clip-path: inset(15% 0 68% 0); }
+}
+@keyframes glitch-b {
+  0%, 85%, 95%, 100% { opacity: 0; }
+  87% { opacity: 1; transform: translate(4px,  1px);  clip-path: inset(22% 0 60% 0); }
+  89% { opacity: 1; transform: translate(-3px,-1px);  clip-path: inset(74% 0 10% 0); }
+  91% { opacity: 1; transform: translate(2px,  0);    clip-path: inset(46% 0 40% 0); }
+  93% { opacity: 1; transform: translate(-1px, 1px);  clip-path: inset(4%  0 84% 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glitch::before, .glitch::after { animation: none; opacity: 0; }
+  .pending-dot { animation: none; }
+}
+
+/* ── Carousel ─────────────────────────────────────────────────────────────── */
+
+/* Native horizontal scroll, so swipe and keyboard work with the script absent.
+   The track is full-bleed and padded to the wrap gutter, which lets the next
+   card sit half off the right edge and read as a track rather than a row. */
+.carousel { margin-top: 30px; }
+.carousel-track {
+  display: flex; gap: 16px;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scroll-behavior: smooth;
+  padding: 5px max(24px, calc((100vw - 1120px) / 2)) 20px;
+  scrollbar-width: none;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-track:focus-visible { outline: 2px solid var(--ember); outline-offset: -3px; }
+
+.rcard {
+  scroll-snap-align: start; flex: 0 0 clamp(256px, 76vw, 328px);
+  display: flex; flex-direction: column; padding: 22px;
+  background: var(--surface); border: var(--border) solid var(--line);
+  box-shadow: var(--shadow);
+}
+.rcard-eyebrow {
+  font-family: var(--mono); font-size: 0.61rem; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+}
+.rcard-stat {
+  margin: 13px 0 9px; font-family: var(--mono); font-size: 2.05rem;
+  font-weight: 600; letter-spacing: -0.02em; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.rcard-stat span { margin-left: 6px; font-size: 0.84rem; letter-spacing: 0.02em; color: var(--ember); }
+.rcard h3 { font-size: 1.05rem; }
+.rcard p { margin: 10px 0 0; font-size: 0.855rem; color: var(--muted); }
+.rcard-src {
+  margin-top: auto; padding-top: 18px;
+  font-family: var(--mono); font-size: 0.59rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted); opacity: 0.7;
+}
+
+.carousel-foot { display: flex; align-items: center; gap: 16px; margin-top: 4px; }
+.carousel-dots { display: flex; flex-wrap: wrap; gap: 6px; }
+.carousel-dot {
+  width: 22px; height: 4px; padding: 0; border: 0; cursor: pointer;
+  background: var(--line); transition: background 0.15s;
+}
+.carousel-dot[aria-current="true"] { background: var(--ember); }
+.carousel-arrows { margin-left: auto; display: flex; gap: 9px; }
+.carousel-btn {
+  width: 42px; height: 42px; cursor: pointer; font-size: 1.25rem; line-height: 1;
+  background: var(--surface); color: var(--text);
+  border: var(--border) solid var(--line); box-shadow: var(--shadow-sm);
+}
+.carousel-btn:hover { border-color: var(--ember); color: var(--ember); }
+@media (max-width: 560px) { .carousel-arrows { display: none; } }
+
+/* ── Standings ────────────────────────────────────────────────────────────── */
+
+.standings { width: 100%; border-collapse: collapse; font-size: 0.94rem; }
+.standings th {
+  text-align: left; font-family: var(--mono); font-size: 0.66rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  padding: 0 9px 10px; border-bottom: var(--border) solid var(--line);
+}
+.standings td { padding: 10px 9px; border-bottom: 1px solid var(--line); }
+.standings tr:last-child td { border-bottom: none; }
+.standings .num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.standings .rank { width: 2.4rem; font-family: var(--mono); color: var(--muted); }
+.standings tr.is-you { background: rgba(var(--ember-rgb), 0.12); }
+.standings tr.is-you .rank { color: var(--ember); }
+.swatch { display: inline-block; width: 10px; height: 18px; border: 1px solid var(--line); vertical-align: -4px; margin-right: 9px; }
+.school-name { font-weight: 700; }
+.table-note { font-size: 0.82rem; color: var(--muted); margin-top: 14px; }
+.table-status { font-size: 0.88rem; color: var(--muted); padding: 16px 0; margin: 0; }
+
+/* ── School chips ─────────────────────────────────────────────────────────── */
+
+.chips { display: flex; flex-wrap: wrap; gap: 9px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: var(--border) solid var(--line); background: var(--surface);
+  color: inherit; text-decoration: none; padding: 8px 13px;
+  font-size: 0.85rem; font-weight: 700;
+  transition: box-shadow 0.09s ease, transform 0.09s ease;
+}
+.chip:hover { box-shadow: var(--shadow-sm); transform: translate(-1px, -1px); }
+.chip .dot { width: 9px; height: 9px; border: 1px solid var(--line); flex: none; }
+@media (prefers-reduced-motion: reduce) { .chip { transition: none; } }
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
+
+.site-foot { padding: 32px 0 44px; font-size: 0.84rem; color: var(--muted); }
+.site-foot .wrap { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.site-foot svg { width: 26px; height: 26px; }
+.site-foot .links { margin-left: auto; display: flex; gap: 18px; }
+.site-foot a { text-decoration: none; }
+.site-foot a:hover { color: var(--text); }
+.disclaimer { margin-top: 12px; font-size: 0.76rem; opacity: 0.85; max-width: 68ch; }
+
+/* Wide content scrolls inside its own box; the page body never does. */
+.scroll-x { overflow-x: auto; }
+
+/* ── Bounty infographic ───────────────────────────────────────────────────── */
+
+/* Three panels and a strip, drawn as one SVG so the whole thing scales as a
+   unit. Text is set in SVG rather than laid out in HTML because the panels have
+   to keep their relative positions at every width — reflowing them into a
+   column loses the left-to-right reading that carries the sequence. It stays
+   readable down to about 340px, which is where the site's own breakpoint is. */
+.bounty {
+  margin: 22px 0 0;
+  border: var(--border) solid var(--line);
+  background: var(--surface);
+  padding: 14px;
+  overflow-x: auto;
+}
+.bounty svg { display: block; width: 100%; min-width: 620px; height: auto; }
+
+/* One mono scale for the whole drawing, so the panels read as one system. */
+.bounty text { font-family: var(--mono); }
+.bnum  { fill: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; }
+.bhead { fill: var(--text); font-size: 13px; font-weight: 700; letter-spacing: 0.1em; }
+.bkey  { fill: var(--text); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; }
+.bkey--ember { fill: var(--ember); }
+.bsub  { fill: var(--muted); font-size: 10px; letter-spacing: 0.04em; }
+.bbody { fill: var(--muted); font-size: 11.5px; font-family: var(--font); }
+
+/* ── Exploit psychology flowchart ─────────────────────────────────────────── */
+
+/* Same reasoning as the bounty drawing: six boxes converging on one is a shape,
+   and the shape is lost the moment the boxes reflow into a column. So it scales
+   as one SVG and scrolls sideways on a narrow screen instead of restacking. */
+.psych {
+  margin: 22px 0 0;
+  border: var(--border) solid var(--line);
+  background: var(--surface-2);
+  padding: 14px;
+  overflow-x: auto;
+}
+/* 820 rather than 680: below that the SVG's own type shrinks with it, and the
+   quotes are the point of the drawing. */
+.psych svg { display: block; width: 100%; min-width: 820px; height: auto; }
+
+/* The reel lives inside the drawing, filling the centre column under the
+   outcome bar. Both the stage and the numbers below are in units of the
+   SVG's own 960x570 frame, so the video stays in place as the drawing
+   scales: x 330 to 630 and y 116 to 566, a 2:3 crop running the full height
+   of the three box rows either side of it. */
+.psych-stage { position: relative; min-width: 820px; }
+.psych-reel {
+  position: absolute; margin: 0;
+  left: 34.375%; width: 31.25%;
+  top: 20.35%; height: 78.95%;
+  border: var(--border) solid var(--line);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-sm);
+  padding: 6px;
+}
+.psych-reel video {
+  display: block; width: 100%; height: 100%;
+  object-fit: cover; background: #000;
+}
+
+.pbox rect { fill: var(--surface); stroke: var(--line); stroke-width: 2; }
+.pbox line { stroke: var(--line); stroke-width: 1; }
+
+/* The mechanic is mono and ember; the sentence under it is the runner's own,
+   so it is set in the body face rather than in the interface one, larger than
+   the label and in full-strength text colour, because the sentence is the
+   part meant to be read. 11.5px with 0.06em is what fits the longest label,
+   "INTERGROUP COMPETITION", on one line inside a 276px box. */
+.pkey {
+  fill: var(--ember); font-family: var(--mono); font-size: 11.5px;
+  font-weight: 700; letter-spacing: 0.06em;
+}
+.pquote { fill: var(--text); font-family: var(--font); font-size: 15px; }
+.pgoal {
+  fill: var(--text); font-family: var(--mono); font-size: 20px;
+  font-weight: 700; letter-spacing: 0.08em;
+}

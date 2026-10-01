@@ -1,0 +1,10 @@
+# Cloudflare Pages / Netlify rewrite rules.
+#
+# Share links from the app are /join/<slug>. There is one page behind them; the
+# slug is read off the path by school.html. A 200 rewrite rather than a 302, so
+# the path the user was sent survives into the address bar for the page to parse.
+#
+# The file is school.html and not join.html on purpose. Workers static assets
+# map /join onto join.html automatically, and that mapping fires before this
+# rule — /join/nus was being redirected to /join with the slug thrown away.
+/join/*   /school   200

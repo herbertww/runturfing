@@ -1,0 +1,141 @@
+{
+  "expo": {
+    "name": "Runturfing",
+    "slug": "runfluence",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FBFBF9"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.runturfing.app",
+      "infoPlist": {
+        "NSHealthShareUsageDescription": "Runturfing uses your workout routes to build your territory map.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Runturfing needs background location to record your territory runs.",
+        "NSLocationWhenInUseUsageDescription": "Runturfing uses your location to track runs and show territory on the map.",
+        "UIBackgroundModes": [
+          "location"
+        ],
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSLocationAlwaysUsageDescription": "Runturfing records your route in the background so your run keeps being tracked with the screen off.",
+        "NSPhotoLibraryAddUsageDescription": "Runturfing saves your run card to your photos so you can post it.",
+        "LSApplicationQueriesSchemes": [
+          "instagram-stories",
+          "instagram"
+        ]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1C293C"
+      },
+      "package": "com.runturfing.app",
+      "versionCode": 1,
+      "compileSdkVersion": 36,
+      "targetSdkVersion": 36,
+      "minSdkVersion": 26,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION",
+        "ACTIVITY_RECOGNITION",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE",
+        "POST_NOTIFICATIONS",
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "CAMERA",
+        "READ_MEDIA_IMAGES"
+      ],
+      "googleServicesFile": "./google-services.json",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "runturfing.app",
+              "pathPrefix": "/"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ],
+      "config": {
+        "googleMaps": {}
+      },
+      "runtimeVersion": "1.0.0"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Runturfing needs background location access to accurately record your territory runs while your phone screen is off.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#6C63FF",
+          "sounds": []
+        }
+      ],
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "merchant.com.runturfing.app",
+          "enableGooglePay": true
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Runturfing saves your run card to your photos so you can post it.",
+          "savePhotosPermission": "Runturfing saves your run card to your photos so you can post it.",
+          "isAccessMediaLocationEnabled": false
+        }
+      ]
+    ],
+    "scheme": "runturfing",
+    "web": {
+      "bundler": "metro"
+    },
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c3a04620-fa3b-4ae6-8bc0-587084f15616"
+      },
+      "apiBaseUrl": "https://api-production-872d.up.railway.app",
+      "stripePublishableKey": "pk_test_YOUR_STRIPE_KEY"
+    },
+    "owner": "kievery",
+    "updates": {
+      "url": "https://u.expo.dev/c3a04620-fa3b-4ae6-8bc0-587084f15616",
+      "requestHeaders": {
+        "expo-channel-name": "preview"
+      }
+    },
+    "runtimeVersion": "1.0.0"
+  }
+}

@@ -1,0 +1,15 @@
+# Mirrors .gitignore for EAS uploads (used because builds run with EAS_NO_VCS=1
+# on Windows where eas-cli can't invoke git). Keep in sync with .gitignore.
+node_modules/
+.expo/
+dist/
+web-build/
+.env
+.env.local
+google-play-service-account.json
+*.keystore
+*.jks
+android/
+ios/
+.DS_Store
+*.log

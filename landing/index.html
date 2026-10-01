@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Runturfing — the streets you run become yours</title>
+<meta name="description" content="Runturfing turns the routes you already run into territory you hold on a map. Ownership is winner-takes-all per node, it decays if you stop, and every season runs two boards: every runner ranked openly, and the groups of six ranked against each other.">
+<meta property="og:title" content="Runturfing — the streets you run become yours">
+<meta property="og:description" content="Territory you can actually lose. Run the same corridors, hold the ground, and defend it.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body>
+
+<!-- Status of the build, not a promotion. Sits above the header so it scrolls
+     away rather than following the reader down the page. -->
+<div class="pending" role="status">
+  <span class="pending-dot" aria-hidden="true"></span>
+  <span>Awaiting app approval</span>
+</div>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/"><span data-logo="compact"></span><span>RUNTURFING</span></a>
+    <nav class="site-nav">
+      <a href="/" aria-current="page">Home</a>
+      <a href="#mechanic">How it works</a>
+      <a href="#inferno">Seasons</a>
+      <a href="/orientation">Orientation</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══ Hero ═══════════════════════════════════════════════════════════════ -->
+<section class="hero hero--flood">
+  <!-- The group shot is the hero's ground, not an inset. It sits under the hex
+       field and the vignette, so the type never has to fight it. -->
+  <div class="hero-bg" aria-hidden="true">
+    <img src="/faces/group.webp" width="1200" height="800" loading="eager" alt="">
+  </div>
+  <div class="hero-field" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <!-- Each line carries its own data-text: the glitch copies are drawn by
+           ::before/::after, which cannot hold markup, so one span per line. -->
+      <h1>
+        <span class="glitch" data-text="Own your run turfs.">Own your run turfs.</span><br>
+        <span class="glitch claim" data-text="Get paid to run.">Get paid to run.</span>
+      </h1>
+      <p class="lede">
+        Runturfing is a mobile app designed to <strong>sustain running
+        motivation</strong> through 6v6v6 group competition, social dating
+        mechanics and ownership gamification.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn" href="#mechanic">How territory works</a>
+        <a class="btn btn--ghost" href="/orientation">Orientation season</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Exploit Psychology ═════════════════════════════════════════════════
+     Six levers, one outcome. Each box names the mechanic and then says it the
+     way a runner says it to themselves. The outcome is a full-width bar across
+     the head of the drawing; under it, three rows down each side and the reel
+     filling the centre column, all four edges flush.
+
+     The width split is what sets the type size, since the SVG scales as a
+     unit: boxes at 276 of the 960 frame and channels at 52 leave 244 units of
+     line inside each box, which is what carries a 15px quote at two lines.
+     Drawn as one SVG because the six-into-one shape only reads when the boxes
+     hold their positions, so it scrolls sideways on a narrow screen rather
+     than restacking. -->
+<section class="band band--tint" id="psychology">
+  <div class="wrap">
+    <div class="kicker">
+      <h2>Exploit psychology</h2>
+    </div>
+    <p class="intro">
+      Nobody keeps running on discipline alone. Six pressures feed the same
+      habit, and the app is built to keep all six switched on at once.
+    </p>
+
+    <figure class="psych" role="img"
+            aria-label="Six factors feeding into one outcome, a sustained running habit. Groups motivate their members: I have to keep running to not let my groupies down. Intergroup competition adds extra mental fuel: we got to beat the others as a team. Territory-conquest triggers loss-aversion: got to keep running to hold my nodes. Leaderboards avail goal-setting motivation: this run today can promote me to Captain. Limit break, dating dynamics: got to run more than the other guys and impress that girl. Money money money: oh I get paid to exercise, better be on top to meet the cutoff.">
+      <div class="psych-stage">
+      <svg viewBox="0 0 960 570" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+           focusable="false">
+        <defs>
+          <marker id="ph" viewBox="0 0 10 10" refX="8" refY="5"
+                  markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,1 L9,5 L0,9 Z" fill="var(--line)"/>
+          </marker>
+        </defs>
+
+        <!-- ── The outcome, the full width of the drawing ──────────────── -->
+        <rect x="2" y="2" width="956" height="84"
+              fill="rgba(var(--ember-rgb),0.14)" stroke="var(--ember)" stroke-width="2"/>
+        <text x="480" y="54" class="pgoal" text-anchor="middle">SUSTAINED RUNNING HABIT</text>
+
+        <!-- ── Left column ─────────────────────────────────────────────── -->
+        <g class="pbox">
+          <rect x="2" y="116" width="276" height="140"/>
+          <line x1="20" y1="180" x2="260" y2="180"/>
+        </g>
+        <text x="20" y="146" class="pkey">GROUPS MOTIVATE</text>
+        <text x="20" y="164" class="pkey">THEIR MEMBERS</text>
+        <text x="20" y="210" class="pquote">“I have to keep running to not</text>
+        <text x="20" y="234" class="pquote">let my groupies down”</text>
+
+        <g class="pbox">
+          <rect x="2" y="271" width="276" height="140"/>
+          <line x1="20" y1="335" x2="260" y2="335"/>
+        </g>
+        <text x="20" y="301" class="pkey">INTERGROUP COMPETITION</text>
+        <text x="20" y="319" class="pkey">ADDS EXTRA MENTAL FUEL</text>
+        <text x="20" y="365" class="pquote">“We got to beat the others</text>
+        <text x="20" y="389" class="pquote">as a team”</text>
+
+        <g class="pbox">
+          <rect x="2" y="426" width="276" height="140"/>
+          <line x1="20" y1="490" x2="260" y2="490"/>
+        </g>
+        <text x="20" y="456" class="pkey">TERRITORY-CONQUEST</text>
+        <text x="20" y="474" class="pkey">TRIGGERS LOSS-AVERSION</text>
+        <text x="20" y="520" class="pquote">“Got to keep running to</text>
+        <text x="20" y="544" class="pquote">hold my nodes”</text>
+
+        <!-- ── Right column ────────────────────────────────────────────── -->
+        <g class="pbox">
+          <rect x="682" y="116" width="276" height="140"/>
+          <line x1="700" y1="180" x2="940" y2="180"/>
+        </g>
+        <text x="700" y="146" class="pkey">LEADERBOARDS AVAIL</text>
+        <text x="700" y="164" class="pkey">GOAL-SETTING MOTIVATION</text>
+        <text x="700" y="210" class="pquote">“This run today can promote</text>
+        <text x="700" y="234" class="pquote">me to Captain!”</text>
+
+        <g class="pbox">
+          <rect x="682" y="271" width="276" height="140"/>
+          <line x1="700" y1="335" x2="940" y2="335"/>
+        </g>
+        <text x="700" y="301" class="pkey">LIMIT BREAK!</text>
+        <text x="700" y="319" class="pkey">DATING DYNAMICS</text>
+        <text x="700" y="365" class="pquote">“Got to run more than the other</text>
+        <text x="700" y="389" class="pquote">guys and impress that girl!”</text>
+
+        <!-- One line of label here, so the quote starts higher and takes the
+             third line it needs. -->
+        <g class="pbox">
+          <rect x="682" y="426" width="276" height="140"/>
+          <line x1="700" y1="474" x2="940" y2="474"/>
+        </g>
+        <text x="700" y="456" class="pkey">MONEY MONEY MONEY</text>
+        <text x="700" y="504" class="pquote">“Oh I get PAID to exercise?!</text>
+        <text x="700" y="528" class="pquote">Better be on top to meet</text>
+        <text x="700" y="552" class="pquote">the cutoff!”</text>
+
+        <!-- ── The six feeds. They run up two narrow channels between the
+             boxes and the reel, and land on the bar's bottom edge. ────── -->
+        <g fill="none" stroke="var(--line)" stroke-width="2" marker-end="url(#ph)">
+          <path d="M278,186 C296,186 296,176 296,98"/>
+          <path d="M278,341 C300,341 308,250 308,98"/>
+          <path d="M278,496 C312,496 320,290 320,98"/>
+          <path d="M682,186 C664,186 664,176 664,98"/>
+          <path d="M682,341 C660,341 652,250 652,98"/>
+          <path d="M682,496 C648,496 640,290 640,98"/>
+        </g>
+      </svg>
+
+      <!-- Conor O'Brien's reel, used with his permission and served from here
+           rather than embedded: Instagram stopped rendering logged-out embeds
+           of it, so the iframe only ever drew their "post may have been
+           removed" card. He is talking, so it does not autoplay: poster frame,
+           and the file only downloads on a click. It fills the centre column,
+           flush with the box rows either side of it, and is positioned in
+           percentages of the same 960x570 frame the SVG uses so it tracks the
+           drawing at every width. -->
+      <figure class="psych-reel">
+        <video controls preload="none" playsinline
+               poster="/media/cobreezzy-reel.jpg" width="480" height="720"
+               aria-label="Conor O'Brien, walking and filming himself, explaining that he averages 12,400 steps a day and is still tens of thousands behind the leader of a walking challenge.">
+          <source src="/media/cobreezzy-reel.mp4" type="video/mp4">
+        </video>
+      </figure>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══ Runner's Inferno ═══════════════════════════════════════════════════
+     Replaces the old 6×/14d/1-per-cell strip. The three numbers below are the
+     copresence findings the app already prints in Android/src/data/research.ts,
+     so the season pitch and the research library cannot drift apart. -->
+<section class="band band--tint" id="inferno">
+  <div class="wrap">
+    <div class="grid grid--2" style="align-items:center">
+      <div>
+        <span class="eyebrow"><span class="dot"></span>Seasons</span>
+        <h2 style="margin-top:14px">Runner's Inferno</h2>
+        <p class="intro" style="margin:14px 0 0">
+          Intergroup competition tends to sustain running motivation. Our
+          seasonals last 3 weeks and put you in a random group with other
+          strangers. Run at your own time, no meetup friction, wherever you
+          want.
+        </p>
+        <p class="intro" style="margin:14px 0 0">
+          A season runs two boards. One ranks every runner who entered against
+          every other, so your standing is your place among all of them. The
+          other ranks the groups of six against each other, which is the part
+          your own group is playing for.
+        </p>
+      </div>
+
+      <!-- One group, six squares. Each was shot alone in a different place at
+           a different hour, which is the arrangement the season actually is. -->
+      <figure class="six" role="img"
+              aria-label="Six runners, each photographed alone on their own route at a different hour.">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </figure>
+    </div>
+
+    <!-- ── Optional: rundating ────────────────────────────────────────────── -->
+    <div class="slab slab--lead" style="margin-top:30px">
+      <span class="tag">Rundating · <span class="tag-hi">optional</span></span>
+      <h3 style="margin-top:10px">Bounties help us finance the app</h3>
+      <p class="small muted" style="margin:10px 0 0">
+        Entering a season is free. Men can pay a bounty on top of that to be
+        guaranteed a mixed group. The bounty splits in half: half funds the app,
+        and half goes to the top women runners in the season when it
+        closes.<a href="#rundating-note" id="rundating-ref" class="fn">*</a>
+      </p>
+
+      <!-- The three moments the bounty is touched, in order: posted at the
+           start, held through the season, paid out at the close. Entering a
+           season costs nothing, so the only money in this drawing is the
+           bounty. -->
+      <figure class="bounty" role="img"
+              aria-label="The bounty in three stages. Season start: entering a season is free, and a man may add an optional bounty on top, half of which funds the app. During the season: matching guarantees him a mixed group of six, three men and three women, and the payout half is held in escrow for the whole season. End of season: that half is split between the top women runners, each of whom receives the same fixed amount.">
+        <svg viewBox="0 0 960 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+             focusable="false">
+          <defs>
+            <marker id="bh" viewBox="0 0 10 10" refX="8" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,1 L9,5 L0,9 Z" fill="var(--line)"/>
+            </marker>
+          </defs>
+
+          <!-- Season start. Two boxes so the free thing and the paid thing sit
+               side by side and cannot be confused for one another. -->
+          <rect x="4" y="30" width="272" height="156" fill="var(--surface-2)"
+                stroke="var(--line)" stroke-width="2"/>
+          <text x="20" y="22" class="bnum">SEASON START</text>
+          <text x="20" y="58" class="bhead">HE POSTS A BOUNTY</text>
+          <rect x="20" y="74" width="112" height="44" fill="none"
+                stroke="var(--line)" stroke-width="2"/>
+          <text x="76" y="94" class="bkey" text-anchor="middle">SEASON ENTRY</text>
+          <text x="76" y="110" class="bsub" text-anchor="middle">always free</text>
+          <rect x="146" y="74" width="112" height="44" fill="rgba(var(--ember-rgb),0.16)"
+                stroke="var(--ember)" stroke-width="2"/>
+          <text x="202" y="94" class="bkey bkey--ember" text-anchor="middle">+ BOUNTY</text>
+          <text x="202" y="110" class="bsub" text-anchor="middle">optional</text>
+          <text x="20" y="146" class="bbody">Optional. Half of it funds the</text>
+          <text x="20" y="164" class="bbody">app, half becomes the pool.</text>
+
+          <line x1="282" y1="108" x2="326" y2="108" stroke="var(--line)"
+                stroke-width="2" marker-end="url(#bh)"/>
+
+          <!-- During the season. Three and three is what "mixed" means here.
+               The six squares are on a 40px pitch with a 12px break in the
+               middle, so the row ends flush with the panel's inner edge. -->
+          <rect x="332" y="30" width="272" height="156" fill="var(--surface-2)"
+                stroke="var(--line)" stroke-width="2"/>
+          <text x="348" y="22" class="bnum">DURING SEASON</text>
+          <text x="348" y="58" class="bhead">HE GETS A MIXED SIX</text>
+          <g stroke="var(--line)" stroke-width="2">
+            <rect x="348" y="74" width="34" height="34" fill="var(--ember)"/>
+            <rect x="388" y="74" width="34" height="34" fill="var(--ember)"/>
+            <rect x="428" y="74" width="34" height="34" fill="var(--ember)"/>
+            <rect x="474" y="74" width="34" height="34" fill="var(--teal)"/>
+            <rect x="514" y="74" width="34" height="34" fill="var(--teal)"/>
+            <rect x="554" y="74" width="34" height="34" fill="var(--teal)"/>
+          </g>
+          <text x="405" y="126" class="bsub" text-anchor="middle">3 men</text>
+          <text x="531" y="126" class="bsub" text-anchor="middle">3 women</text>
+          <text x="348" y="156" class="bbody">The payout half sits in escrow</text>
+          <text x="348" y="174" class="bbody">through the season duration.</text>
+
+          <line x1="610" y1="108" x2="654" y2="108" stroke="var(--line)"
+                stroke-width="2" marker-end="url(#bh)"/>
+
+          <!-- End of season. Three equal blocks, not a descending bar chart:
+               every top woman runner is paid the same fixed amount, so unequal
+               bars would draw a rule we do not run. -->
+          <rect x="660" y="30" width="272" height="156" fill="var(--surface-2)"
+                stroke="var(--line)" stroke-width="2"/>
+          <text x="676" y="22" class="bnum">END OF SEASON</text>
+          <text x="676" y="58" class="bhead">TOP WOMEN ARE PAID</text>
+          <g stroke="var(--line)" stroke-width="2" fill="var(--yellow)">
+            <rect x="676" y="74" width="72" height="36"/>
+            <rect x="760" y="74" width="72" height="36"/>
+            <rect x="844" y="74" width="72" height="36"/>
+          </g>
+          <text x="796" y="126" class="bsub" text-anchor="middle">the same fixed amount each</text>
+          <text x="676" y="156" class="bbody">That half is split between the</text>
+          <text x="676" y="174" class="bbody">top women runners.</text>
+        </svg>
+      </figure>
+
+      <p class="small muted fn-note" id="rundating-note">
+        <span class="fn">*</span> Top is measured on distance covered and how
+        often you ran across the season. Where the bar sits stays private,
+        because a payout rule published in full is a payout rule someone works
+        out how to farm.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Stat strip ═════════════════════════════════════════════════════════
+     Copresence, in three measured results rather than three product facts. -->
+<section class="strip">
+  <div class="wrap">
+    <div class="strip-inner">
+      <div class="stat">
+        <div class="n">12<span class="u">s</span></div>
+        <div class="l">
+          Parkrun regulars who felt most part of the group finished a 5K up to
+          12 seconds quicker, and rated the effort no harder than usual.
+          <span class="src">Davis et al., PLOS ONE 2021</span>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="n">2<span class="u">×</span></div>
+        <div class="l">
+          When the group's score depends on your effort, you keep going about
+          twice as long as you manage on your own.
+          <span class="src">Irwin &amp; Feltz, Ann Behav Med 2012</span>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="n">0.3<span class="u">km</span></div>
+        <div class="l">
+          Across 1.1 million runners, every extra kilometre the people around
+          you ran added roughly 0.3 km to your own run that day.
+          <span class="src">Aral &amp; Nicolaides, Nature Comms 2017</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ The mechanic ═══════════════════════════════════════════════════════ -->
+<section class="band band--field" id="mechanic">
+  <!-- Same generated hex field as the hero, bled across the whole band. -->
+  <div class="hero-field" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="kicker">
+      <h2>Conquer nodes with frequency</h2>
+    </div>
+    <p class="intro">
+      Nodes are held not just because you ran further, but through repeated runs
+      over the same trail. Steal nodes from other runners.
+    </p>
+
+    <div class="grid grid--3">
+      <div class="slab slab--flat">
+        <span class="step-num">1</span>
+        <h3>Run, and the grid scores it</h3>
+        <p class="small muted" style="margin-top:9px">
+          Your route is laid over a hexagonal grid, the same one Uber's H3 system
+          uses. Each cell picks up a score weighted by how much of it you covered.
+        </p>
+      </div>
+      <div class="slab slab--flat">
+        <span class="step-num">2</span>
+        <h3>Come back, and you own it</h3>
+        <p class="small muted" style="margin-top:9px">
+          Ownership is winner-takes-all per cell. Whoever holds the highest live
+          score holds the cell outright, which is why running the same streets
+          beats running new ones.
+        </p>
+      </div>
+      <div class="slab slab--flat">
+        <span class="step-num">3</span>
+        <h3>Stay away, and you lose it</h3>
+        <p class="small muted" style="margin-top:9px">
+          Scores decay nightly. A month off a corridor hands it back to whoever
+          is still out there. Territory that cannot be lost is not worth taking.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid--2" style="margin-top:32px; align-items:start">
+      <div>
+        <div class="device">
+          <img src="/app-demo.gif" width="320" height="712" loading="lazy"
+               alt="The Runturfing app, cycling between a map of hexagonal territory nodes over Jurong and the leaderboard those nodes feed.">
+        </div>
+        <p class="device-cap">Sample territory over Jurong. 32 nodes held, 211 contested.</p>
+      </div>
+
+      <div class="grid" style="gap:18px">
+        <div class="slab slab--lead">
+          <span class="tag">Influence</span>
+          <h3 style="margin-top:10px">Showing up in hard ground still counts</h3>
+          <p class="small muted" style="margin:10px 0 0">
+            Winner-takes-all means second place across a whole neighbourhood
+            scores nothing, which punishes anyone who runs somewhere busy.
+            Influence counts every cell you have a live score in, held or not,
+            and the leaderboard sorts on its 30-day average.
+          </p>
+        </div>
+        <div class="slab slab--teal">
+          <span class="tag tag--teal">Map</span>
+          <h3 style="margin-top:10px">Watch your streets turn your colour</h3>
+          <p class="small muted" style="margin:10px 0 0">
+            Run nodes to contest them. Leave them alone for a while and the
+            colour drains back out. When the nodes around a street are yours as
+            well, the whole area deepens, which is how a stronghold ends up
+            looking different from one lucky detour.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Interior Research ══════════════════════════════════════════════════
+     The same eleven findings the app carries in Android/src/data/research.ts,
+     in the same order. Every claim on this page traces to one of them, so the
+     carousel is the citation list rather than a separate marketing artefact.
+     Scrolls natively: the JS only adds auto-advance and the arrows. -->
+<section class="band" id="research">
+  <div class="wrap">
+    <div class="kicker">
+      <h2>Interior Research</h2>
+    </div>
+    <p class="intro">
+      Every number on this page comes out of the same set of findings. Swipe
+      through, or leave it and it moves on its own.
+    </p>
+  </div>
+
+  <!-- Full-bleed so cards can run off the right edge and read as a track. -->
+  <div class="carousel" data-carousel>
+    <div class="carousel-track" data-carousel-track tabindex="0"
+         aria-label="Research findings. Scrollable horizontally.">
+
+      <article class="rcard">
+        <span class="rcard-eyebrow">Measured at parkrun</span>
+        <div class="rcard-stat">12<span>s faster</span></div>
+        <h3>You run faster with company</h3>
+        <p>Researchers timed parkrun regulars across repeated 5K runs. The ones who felt most part of the group came in up to 12 seconds quicker, and rated the effort no harder than usual.</p>
+        <span class="rcard-src">Davis et al., PLOS ONE 2021</span>
+      </article>
+
+      <article class="rcard">
+        <span class="rcard-eyebrow">The Köhler effect</span>
+        <div class="rcard-stat">2<span>× as long</span></div>
+        <h3>A team keeps you going</h3>
+        <p>When the group score depends on your effort, you last about twice as long as you manage alone. The effect needs your contribution to be indispensable, which is why a group is six.</p>
+        <span class="rcard-src">Irwin &amp; Feltz, Ann Behav Med 2012</span>
+      </article>
+
+      <article class="rcard">
+        <span class="rcard-eyebrow">1.1 million runners, 5 years</span>
+        <div class="rcard-stat">0.3<span>km</span></div>
+        <h3>Your friends drag your distance up</h3>
+        <p>Every extra kilometre your friends ran on a given day added roughly 0.3 km to your own run that day. Weather was used as a natural experiment to separate influence from shared habits.</p>
+        <span class="rcard-src">Aral &amp; Nicolaides, Nature Comms 2017</span>
+      </article>
+
+      <article class="rcard">
+        <span class="rcard-eyebrow">42 studies, 1,843 participants</span>
+        <div class="rcard-stat">↓<span>dropout</span></div>
+        <h3>Walking groups hold people</h3>
+        <p>A meta-analysis of organised walking groups found reductions in blood pressure, resting heart rate, body fat, cholesterol, BMI and depression risk, with few adverse effects and low dropout.</p>
+        <span class="rcard-src">Hanson &amp; Jones, Br J Sports Med 2015</span>
+      </article>
+
+      <article class="rcard">
+        <span class="rcard-eyebrow">247 older adults, 6 months</span>
+        <div class="rcard-stat">↑<span>support</span></div>
+        <h3>Moving with others builds belonging</h3>
+        <p>Perceived social support rose while stress and loneliness fell. The increase in support predicted the drop in loneliness both directly and through the reduction in stress.</p>
+        <span class="rcard-src">Aging Clin Exp Res, 2021</span>
+      </article>
+
+      <article class="rcard">
+        <span class="rcard-eyebrow">Pain threshold as endorphin proxy</span>
+        <div class="rcard-stat">↑<span>threshold</span></div>
+        <h3>Effort itself does some of the bonding</h3>
+        <p>Rowers training as a crew showed higher pain thresholds than after equivalent solo work. A later dance study found synchrony and exertion each raise pain threshold and in-group bonding on their own.</p>
+        <span class="rcard-src">Cohen et al., Biol Lett 2010 · Tarr et al., Biol Lett 2015</span>
+      </article>
+
+      <article class="rcard">
+        <span class="rcard-eyebrow">Randomized controlled trial</span>
+        <div class="rcard-stat">+2<span>%</span></div>
+        <h3>Walking regrows the brain</h3>
+        <p>Sedentary adults walked 40 minutes, three times a week, for a year. Their hippocampus grew by about 2%, winding back one to two years of age-related shrinkage.</p>
+        <span class="rcard-src">Erickson et al., PNAS 2011</span>
+      </article>
+
+      <article class="rcard">
+        <span class="rcard-eyebrow">34,485 adults over 65</span>
+        <div class="rcard-stat">0.1<span>m/s</span></div>
+        <h3>Walking speed predicts survival</h3>
+        <p>Every 0.1 m/s of walking pace tracked with better odds of survival. Age, sex and pace together forecast lifespan about as well as blood pressure, BMI and disease history do.</p>
+        <span class="rcard-src">Studenski et al., JAMA 2011</span>
+      </article>
+
+      <article class="rcard">
+        <span class="rcard-eyebrow">Bone loss in spaceflight</span>
+        <div class="rcard-stat">1–2<span>% / month</span></div>
+        <h3>Bone needs to be loaded</h3>
+        <p>Astronauts lose one to two percent of bone mineral density a month in orbit, roughly ten times the monthly rate of postmenopausal osteoporosis on Earth. The cause is the absence of load, not age.</p>
+        <span class="rcard-src">npj Microgravity, 2020</span>
+      </article>
+
+      <article class="rcard">
+        <span class="rcard-eyebrow">The system with no heart</span>
+        <div class="rcard-stat">↑<span>clearance</span></div>
+        <h3>Muscle is the pump for everything that is not blood</h3>
+        <p>Lymph clears waste out of your tissue and has no heart of its own. It moves when skeletal muscle squeezes the vessels running through it, and tracer cleared faster during dynamic movement than at rest.</p>
+        <span class="rcard-src">Havas et al., J Physiol 1997</span>
+      </article>
+
+      <article class="rcard">
+        <span class="rcard-eyebrow">Evolutionary anatomy</span>
+        <div class="rcard-stat">2M<span>years</span></div>
+        <h3>The body is built for this</h3>
+        <p>A spring-like Achilles, an arched foot, a large gluteus maximus that fires in locomotion, and millions of sweat glands that cool you while you keep moving. These are derived traits of genus Homo.</p>
+        <span class="rcard-src">Bramble &amp; Lieberman, Nature 2004</span>
+      </article>
+
+    </div>
+
+    <div class="wrap carousel-foot">
+      <div class="carousel-dots" data-carousel-dots aria-hidden="true"></div>
+      <div class="carousel-arrows">
+        <button type="button" class="carousel-btn" data-carousel-prev aria-label="Previous finding">‹</button>
+        <button type="button" class="carousel-btn" data-carousel-next aria-label="Next finding">›</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Orientation ════════════════════════════════════════════════════════ -->
+<section class="band" id="orientation-teaser">
+  <div class="wrap">
+    <div class="kicker">
+      <h2>The first season is a school fight.</h2>
+    </div>
+    <p class="intro">
+      Sixteen Singapore institutions are on the board. You opt into one, and the
+      ground you take counts for the crest as well as for you. Free to enter.
+    </p>
+    <div class="hero-actions" style="margin-top:0">
+      <a class="btn" href="/orientation">See the orientation season</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span data-logo="compact" data-shadow="false"></span>
+    <span>Runturfing · Singapore</span>
+    <span class="links">
+      <a href="/#mechanic">How it works</a>
+      <a href="/#inferno">Seasons</a>
+      <a href="/orientation">Orientation</a>
+    </span>
+  </div>
+</footer>
+
+<script src="/site.js"></script>
+</body>
+</html>

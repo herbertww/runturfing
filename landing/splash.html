@@ -1,0 +1,549 @@
+<title>Runfluence — Nobody runs alone</title>
+<style>
+  :root {
+    --ink:        #0A1120;
+    --surface:    #121C2E;
+    --surface-2:  #16223A;
+    --line:       #26374F;
+    --grid:       #22344D;
+    --text:       #E8EEF9;
+    --muted:      #8496B2;
+    --ember:      #FF6A45;
+    --ember-soft: #FF8A6A;
+    --teal:       #35D0C0;
+    --ok:         #46C97E;
+    --ember-rgb: 255,106,69;
+    --teal-rgb:  53,208,192;
+
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+
+    --maxw: 1120px;
+    --r: 14px;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --ink:#F4F0E6; --surface:#FBF8F1; --surface-2:#FFFFFF; --line:#DED4C0; --grid:#D8CDB6;
+      --text:#1B2536; --muted:#6A6455; --ember:#E5532E; --ember-soft:#F0764F; --teal:#128577; --ok:#2E9B5C;
+      --ember-rgb:229,83,46; --teal-rgb:18,133,119;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink:#0A1120; --surface:#121C2E; --surface-2:#16223A; --line:#26374F; --grid:#22344D;
+    --text:#E8EEF9; --muted:#8496B2; --ember:#FF6A45; --ember-soft:#FF8A6A; --teal:#35D0C0; --ok:#46C97E;
+    --ember-rgb:255,106,69; --teal-rgb:53,208,192;
+  }
+  :root[data-theme="light"] {
+    --ink:#F4F0E6; --surface:#FBF8F1; --surface-2:#FFFFFF; --line:#DED4C0; --grid:#D8CDB6;
+    --text:#1B2536; --muted:#6A6455; --ember:#E5532E; --ember-soft:#F0764F; --teal:#128577; --ok:#2E9B5C;
+    --ember-rgb:229,83,46; --teal-rgb:18,133,119;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--ink); color: var(--text);
+    font-family: var(--font-body); line-height: 1.55;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  a { color: inherit; }
+  .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--muted);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .eyebrow .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--ember);
+    animation: pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(var(--ember-rgb), .5); }
+    70% { box-shadow: 0 0 0 9px rgba(var(--ember-rgb), 0); }
+    100% { box-shadow: 0 0 0 0 rgba(var(--ember-rgb), 0); }
+  }
+
+  /* ============ 01 · HERO ============ */
+  .hero { position: relative; overflow: hidden; }
+  #grid { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
+  .hero::after {
+    content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(115% 88% at 16% 14%, transparent 0%, var(--ink) 76%),
+      linear-gradient(180deg, transparent 42%, var(--ink) 97%);
+  }
+  .hero-inner { position: relative; z-index: 2; padding: clamp(80px,12vh,140px) 0 clamp(48px,7vh,80px); }
+  .hero-copy { max-width: 730px; }
+
+  h1 {
+    font-size: clamp(40px, 7vw, 84px); line-height: .98; letter-spacing: -.03em;
+    font-weight: 800; margin: 20px 0 0; text-wrap: balance;
+  }
+  h1 .claim { color: var(--ember); }
+
+  .sub {
+    margin: 22px 0 0; font-size: clamp(17px, 2.05vw, 21px);
+    color: var(--muted); max-width: 580px; text-wrap: pretty;
+  }
+  .sub strong { color: var(--text); font-weight: 600; }
+
+  /* headline proof — the parkrun finding */
+  .proof {
+    margin: 26px 0 0; padding: 18px 20px; max-width: 560px;
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-left: 3px solid var(--teal); border-radius: 10px;
+  }
+  .proof p { margin: 0; font-size: 16px; line-height: 1.5; }
+  .proof p b { color: var(--teal); font-weight: 700; }
+  .proof .cite {
+    display: block; margin-top: 9px; font-family: var(--font-mono);
+    font-size: 11.5px; letter-spacing: .02em; color: var(--muted); text-decoration: none;
+  }
+  .proof .cite:hover { color: var(--teal); }
+
+  /* signup */
+  .signup { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; max-width: 520px; }
+  .signup input[type="email"] {
+    flex: 1 1 240px; min-width: 0; background: var(--surface-2);
+    border: 1.5px solid var(--line); color: var(--text); border-radius: 11px;
+    padding: 15px 16px; font-size: 16px; font-family: var(--font-body);
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .signup input::placeholder { color: var(--muted); }
+  .signup input:focus-visible {
+    outline: none; border-color: var(--ember);
+    box-shadow: 0 0 0 4px rgba(var(--ember-rgb), .18);
+  }
+  .btn {
+    appearance: none; border: 0; cursor: pointer; font-family: var(--font-body);
+    font-weight: 700; font-size: 16px; letter-spacing: -.01em; color: #fff;
+    background: var(--ember); border-radius: 11px; padding: 15px 22px; white-space: nowrap;
+    transition: transform .12s ease, background .15s ease;
+    box-shadow: 0 8px 24px -8px rgba(var(--ember-rgb), .7);
+  }
+  .btn:hover { background: var(--ember-soft); transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+  .microcopy {
+    margin-top: 13px; font-family: var(--font-mono); font-size: 12.5px;
+    color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  .microcopy .sep { opacity: .5; }
+  .form-note { margin-top: 12px; font-size: 14.5px; min-height: 1px; }
+  .form-note[hidden] { display: none; }
+
+  /* social trust bar */
+  .trust { position: relative; z-index: 2; border-top: 1px solid var(--line); }
+  .trust-inner {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--line); border-bottom: 1px solid var(--line);
+  }
+  .stat { background: var(--ink); padding: 24px; }
+  .stat .n {
+    font-family: var(--font-mono); font-size: clamp(22px,3.2vw,31px); font-weight: 600;
+    letter-spacing: -.02em; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1.1;
+  }
+  .stat .n .u { color: var(--ember); }
+  .stat .l { margin-top: 9px; font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+  .stat .l a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+  .stat .l a:hover { color: var(--teal); }
+
+  /* ============ shared section frame ============ */
+  .band { padding: clamp(60px,9vh,104px) 0; position: relative; }
+  .band.alt { background: var(--surface); }
+  .kicker { display: flex; align-items: baseline; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+  .kicker .idx { font-family: var(--font-mono); font-size: 12.5px; color: var(--ember); letter-spacing: .12em; }
+  .kicker h2 {
+    margin: 0; font-size: clamp(27px,4.2vw,42px); letter-spacing: -.025em;
+    font-weight: 800; line-height: 1.05; text-wrap: balance;
+  }
+  .band .intro { color: var(--muted); max-width: 640px; margin: 0 0 38px; font-size: 17px; }
+
+  /* ============ 02 · levers ============ */
+  .levers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .lever {
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: var(--r); padding: 28px 26px; display: flex; flex-direction: column;
+  }
+  .lever .tag {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ember);
+  }
+  .lever h3 { margin: 14px 0 0; font-size: 20px; letter-spacing: -.015em; font-weight: 700; text-wrap: balance; }
+  .lever p { margin: 10px 0 0; color: var(--muted); font-size: 15px; }
+  .lever .bridge { margin-top: auto; padding-top: 16px; font-size: 13.5px; color: var(--text); }
+  .lever .bridge b { color: var(--teal); font-weight: 600; }
+  .lever .src {
+    margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line);
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .02em;
+  }
+  .lever .src a { color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .lever .src a::before { content: "↗"; color: var(--teal); }
+  .lever .src a:hover { color: var(--teal); }
+
+  /* physiology strip — subordinate to the social case */
+  .stakes { margin-top: 44px; padding-top: 32px; border-top: 1px solid var(--line); }
+  .stakes .lead {
+    font-size: 15px; color: var(--text); margin: 0 0 20px; font-weight: 600;
+  }
+  .stakes .lead span { color: var(--muted); font-weight: 400; }
+  .bio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+  .bio .item { display: flex; gap: 13px; align-items: flex-start; }
+  .bio .v {
+    font-family: var(--font-mono); font-size: 20px; font-weight: 600; color: var(--ember);
+    font-variant-numeric: tabular-nums; line-height: 1.25; white-space: nowrap;
+  }
+  .bio .d { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+  .bio .d a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+  .bio .d a:hover { color: var(--teal); }
+
+  /* ============ 03 · close ============ */
+  .close { text-align: center; }
+  .close .kicker { flex-direction: column; align-items: center; gap: 10px; }
+  .close h2 { font-size: clamp(30px,5.2vw,54px); }
+  .close .sub, .close .signup { margin-left: auto; margin-right: auto; }
+  .close .microcopy { justify-content: center; }
+  .close .sub { margin-top: 18px; margin-bottom: 4px; }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0 46px; color: var(--muted); font-size: 13px; }
+  footer .frow { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: center; }
+  footer .brand { font-weight: 800; letter-spacing: -.02em; color: var(--text); font-size: 15px; }
+  .disclaimer { margin-top: 14px; font-size: 12px; opacity: .8; max-width: 660px; }
+
+  .theme-btn {
+    position: fixed; top: 16px; right: 16px; z-index: 20;
+    background: var(--surface-2); color: var(--text); border: 1px solid var(--line);
+    border-radius: 999px; width: 40px; height: 40px; cursor: pointer;
+    font-size: 16px; line-height: 1; display: grid; place-items: center;
+  }
+  .theme-btn:hover { border-color: var(--ember); }
+  .theme-btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+
+  @media (max-width: 880px) {
+    .levers, .trust-inner, .bio { grid-template-columns: 1fr; }
+    .bio { gap: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .eyebrow .dot { animation: none; }
+    .btn, .lever { transition: none; }
+  }
+</style>
+
+<button class="theme-btn" id="themeBtn" aria-label="Toggle light and dark theme" title="Toggle theme">◐</button>
+
+<!-- ═══════════ 01 · HERO — social first ═══════════ -->
+<header class="hero">
+  <canvas id="grid" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow"><span class="dot"></span>Season 14 · groups of 6 forming now</span>
+      <h1>Nobody runs alone.<br><span class="claim">Everybody runs faster.</span></h1>
+      <p class="sub">Runfluence puts you in a group of six for two weeks. You claim territory on your own streets at whatever hour suits you, and your five teammates are in it alongside you. <strong>There is nothing to schedule and no one to meet.</strong></p>
+
+      <div class="proof">
+        <p>Among parkrun runners, those who felt part of the community posted <b>faster 5K times with no increase in perceived effort.</b> Belonging to the group made the running itself easier, not just the showing up.</p>
+        <a class="cite" href="https://pubmed.ncbi.nlm.nih.gov/34525097/" target="_blank" rel="noopener">↗ Davis, MacCarron &amp; Cohen · PLOS ONE 2021</a>
+      </div>
+
+      <form class="signup" id="signupForm" novalidate>
+        <input type="email" id="email" name="email" placeholder="you@email.com" aria-label="Email address" required autocomplete="email">
+        <button class="btn" type="submit">Join a group free</button>
+      </form>
+      <p class="form-note" id="formNote" role="status" hidden></p>
+      <p class="microcopy">
+        <span>Free to join</span><span class="sep">·</span>
+        <span>New season every other Monday</span><span class="sep">·</span>
+        <span>iPhone &amp; Android</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="trust">
+    <div class="wrap"><div class="trust-inner">
+      <div class="stat">
+        <div class="n">Faster<span class="u"> · same effort</span></div>
+        <div class="l">Runners who felt socially included ran quicker without working harder. <a href="https://pubmed.ncbi.nlm.nih.gov/34525097/" target="_blank" rel="noopener">PLOS ONE</a></div>
+      </div>
+      <div class="stat">
+        <div class="n">42<span class="u"> studies</span></div>
+        <div class="l">Walking groups improved health broadly — and people <em>stayed</em>. Dropout was low. <a href="https://pubmed.ncbi.nlm.nih.gov/25601182/" target="_blank" rel="noopener">Br J Sports Med</a></div>
+      </div>
+      <div class="stat">
+        <div class="n">1.1<span class="u">M runners</span></div>
+        <div class="l">Running is socially contagious — peers pull you out the door, measurably. <a href="https://www.nature.com/articles/ncomms14753" target="_blank" rel="noopener">Nature Comms</a></div>
+      </div>
+    </div></div>
+  </div>
+</header>
+
+<!-- ═══════════ 02 · WHY IT WORKS ═══════════ -->
+<section class="band alt">
+  <div class="wrap">
+    <div class="kicker">
+      <span class="idx">WHY IT WORKS</span>
+      <h2>Wanting to run has never been the problem.</h2>
+    </div>
+    <p class="intro">Humans evolved to conserve energy, which is why willpower loses so reliably. Runfluence works around it with three social pulls, arranged so that at least one of them is active on any given day.</p>
+
+    <div class="levers">
+      <article class="lever">
+        <span class="tag">Async · copresence</span>
+        <h3>A group of six, nothing to schedule</h3>
+        <p>Your group runs whenever they want, and you see all of it: their routes, their claims, where they stand. The sense of company arrives without anyone coordinating a meetup.</p>
+        <p class="bridge">Removes <b>coordination</b>, the barrier that ends most running habits, and keeps the belonging that sustains them.</p>
+        <div class="src"><a href="https://pubmed.ncbi.nlm.nih.gov/25601182/" target="_blank" rel="noopener">Walking-group meta-analysis, BJSM 2015</a></div>
+      </article>
+
+      <article class="lever">
+        <span class="tag">Indispensability</span>
+        <h3>Your team can't win without you</h3>
+        <p>Groups compete against other groups, and every run feeds one shared score. Five people notice when you go out, and the same five notice when you don't.</p>
+        <p class="bridge">The <b>Köhler effect</b>: people exercise measurably longer once the team depends on them.</p>
+        <div class="src"><a href="https://pubmed.ncbi.nlm.nih.gov/22576339/" target="_blank" rel="noopener">Irwin &amp; Feltz, Ann Behav Med 2012</a></div>
+      </article>
+
+      <article class="lever">
+        <span class="tag">Loss aversion</span>
+        <h3>Territory you can actually lose</h3>
+        <p>Running the same corridors claims map cells for you. Stop defending them and they fade back out. Losing ground you already earned registers about twice as strongly as gaining it.</p>
+        <p class="bridge">Puts your body's <b>use-it-or-lose-it biology</b> somewhere you can watch it happen.</p>
+        <div class="src"><a href="https://www.nature.com/articles/ncomms14753" target="_blank" rel="noopener">Exercise contagion, Nature Comms 2017</a></div>
+      </article>
+    </div>
+
+    <div class="stakes">
+      <p class="lead">Meanwhile, every run those pulls get you out for is doing this to your body. <span>Each finding below comes from peer-reviewed primary research.</span></p>
+      <div class="bio">
+        <div class="item">
+          <span class="v">+2%</span>
+          <span class="d">Hippocampus <em>growth</em> from walking 3×/week for a year — reversing 1–2 years of brain aging. <a href="https://www.pnas.org/doi/10.1073/pnas.1015950108" target="_blank" rel="noopener">PNAS</a></span>
+        </div>
+        <div class="item">
+          <span class="v">1.2 m/s</span>
+          <span class="d">Pace above this predicted exceptional survival across 34,485 older adults. <a href="https://pubmed.ncbi.nlm.nih.gov/21205966/" target="_blank" rel="noopener">JAMA</a></span>
+        </div>
+        <div class="item">
+          <span class="v">1–2%/mo</span>
+          <span class="d">Bone density lost without mechanical loading. Most "aging" is really deconditioning. <a href="https://www.nature.com/articles/s41526-020-0103-2" target="_blank" rel="noopener">Nature</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 03 · CLOSE ═══════════ -->
+<section class="band close">
+  <div class="wrap">
+    <div class="kicker">
+      <span class="idx">NEXT SEASON</span>
+      <h2>Groups lock Monday.</h2>
+    </div>
+    <p class="sub">Two weeks with five teammates and a map worth defending. Joining is free, and we'll place you in a starting group.</p>
+    <form class="signup" id="signupForm2" novalidate>
+      <input type="email" id="email2" name="email" placeholder="you@email.com" aria-label="Email address" required autocomplete="email">
+      <button class="btn" type="submit">Join a group free</button>
+    </form>
+    <p class="form-note" id="formNote2" role="status" hidden></p>
+    <p class="microcopy"><span>Free to join</span><span class="sep">·</span><span>No card required</span><span class="sep">·</span><span>iPhone &amp; Android</span></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="frow">
+      <span class="brand">Runfluence</span>
+      <span>Nobody runs alone.</span>
+    </div>
+    <p class="disclaimer">Research claims are population-level findings from the cited peer-reviewed sources — not medical advice, and not a promise of individual results. Full evidence base and citations: <code>docs/WALKING_SCIENCE.md</code>.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var root = document.documentElement;
+
+  /* theme toggle */
+  document.getElementById("themeBtn").addEventListener("click", function () {
+    var current = root.getAttribute("data-theme");
+    if (!current) {
+      current = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    root.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    refreshPalette();
+  });
+
+  /* signup (front-end demo — wire to a real endpoint before launch) */
+  function wireForm(formId, inputId, noteId) {
+    var form = document.getElementById(formId);
+    if (!form) return;
+    var input = document.getElementById(inputId);
+    var note = document.getElementById(noteId);
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var val = (input.value || "").trim();
+      note.hidden = false;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        note.style.color = "var(--ember)";
+        note.textContent = "Enter a valid email to hold your spot.";
+        input.focus();
+        return;
+      }
+      note.style.color = "var(--ok)";
+      note.textContent = "You're in for Season 14 — we'll email your group placement.";
+      form.reset();
+    });
+  }
+  wireForm("signupForm", "email", "formNote");
+  wireForm("signupForm2", "email2", "formNote2");
+
+  /* hex-grid territory canvas */
+  var canvas = document.getElementById("grid");
+  var ctx = canvas.getContext("2d");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var pal = {};
+
+  function refreshPalette() {
+    var cs = getComputedStyle(root);
+    pal.grid = cs.getPropertyValue("--grid").trim();
+    pal.emberRGB = cs.getPropertyValue("--ember-rgb").trim();
+    pal.tealRGB = cs.getPropertyValue("--teal-rgb").trim();
+  }
+  refreshPalette();
+
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+  var W = 0, H = 0, s = 34, cols = 0, rows = 0, cells = [];
+
+  function buildGrid() {
+    var rect = canvas.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    if (!W || !H) return;
+    canvas.width = Math.floor(W * DPR);
+    canvas.height = Math.floor(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+    s = W < 640 ? 26 : 34;
+    var hstep = s * 1.5, vstep = s * Math.sqrt(3);
+    cols = Math.ceil(W / hstep) + 2;
+    rows = Math.ceil(H / vstep) + 2;
+
+    cells = [];
+    for (var c = 0; c < cols; c++) {
+      for (var r = 0; r < rows; r++) {
+        cells.push({
+          c: c, r: r,
+          cx: c * hstep,
+          cy: r * vstep + (c % 2 ? vstep / 2 : 0),
+          claim: 0, target: 0, hue: 0
+        });
+      }
+    }
+  }
+
+  function hexPath(cx, cy, rad) {
+    ctx.beginPath();
+    for (var i = 0; i < 6; i++) {
+      var a = Math.PI / 180 * (60 * i);
+      var x = cx + rad * Math.cos(a), y = cy + rad * Math.sin(a);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+  }
+
+  function idx(c, r) {
+    if (c < 0 || c >= cols || r < 0 || r >= rows) return -1;
+    return c * rows + r;
+  }
+
+  /* ignite a cluster — one runner claiming a corridor */
+  function ignite() {
+    if (!cells.length) return;
+    var start = cells[(Math.random() * cells.length) | 0];
+    var rival = Math.random() < 0.28 ? 1 : 0;
+    var size = 3 + (Math.random() * 5 | 0);
+    var frontier = [start], seen = {}, count = 0;
+    while (frontier.length && count < size) {
+      var cell = frontier.splice((Math.random() * frontier.length) | 0, 1)[0];
+      var key = cell.c + "_" + cell.r;
+      if (seen[key]) continue;
+      seen[key] = 1;
+      cell.target = 0.55 + Math.random() * 0.45;
+      cell.hue = rival;
+      count++;
+      var even = cell.c % 2 === 0;
+      var nb = even ? [[0,-1],[0,1],[-1,0],[1,0],[-1,-1],[1,-1]]
+                    : [[0,-1],[0,1],[-1,0],[1,0],[-1,1],[1,1]];
+      for (var k = 0; k < nb.length; k++) {
+        var ni = idx(cell.c + nb[k][0], cell.r + nb[k][1]);
+        if (ni >= 0 && cells[ni] && !seen[cells[ni].c + "_" + cells[ni].r]) frontier.push(cells[ni]);
+      }
+    }
+  }
+
+  function paint() {
+    ctx.clearRect(0, 0, W, H);
+    for (var i = 0; i < cells.length; i++) {
+      var cell = cells[i];
+      hexPath(cell.cx, cell.cy, s - 1.5);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = pal.grid;
+      ctx.globalAlpha = 0.42;
+      ctx.stroke();
+      if (cell.claim > 0.01) {
+        var rgb = cell.hue ? pal.tealRGB : pal.emberRGB;
+        ctx.globalAlpha = cell.claim * 0.30;
+        ctx.fillStyle = "rgb(" + rgb + ")";
+        ctx.fill();
+        ctx.globalAlpha = cell.claim * 0.9;
+        ctx.lineWidth = 1.4;
+        ctx.strokeStyle = "rgb(" + rgb + ")";
+        ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  var last = 0, igniteTimer = 0;
+  function frame(t) {
+    if (!last) last = t;
+    var dt = Math.min((t - last) / 1000, 0.05);
+    last = t;
+    igniteTimer -= dt;
+    if (igniteTimer <= 0) { ignite(); igniteTimer = 0.5 + Math.random() * 0.7; }
+    for (var i = 0; i < cells.length; i++) {
+      var cell = cells[i];
+      cell.claim += (cell.target - cell.claim) * Math.min(dt * 3.2, 1);
+      cell.target *= (1 - dt * 0.34);              /* territory decay */
+      if (cell.target < 0.02) cell.target = 0;
+    }
+    paint();
+    requestAnimationFrame(frame);
+  }
+
+  function drawStatic() {
+    for (var n = 0; n < 6; n++) ignite();
+    for (var p = 0; p < 40; p++) {
+      for (var i = 0; i < cells.length; i++) {
+        cells[i].claim += (cells[i].target - cells[i].claim) * 0.3;
+      }
+    }
+    paint();
+  }
+
+  var resizeRAF;
+  window.addEventListener("resize", function () {
+    cancelAnimationFrame(resizeRAF);
+    resizeRAF = requestAnimationFrame(function () {
+      buildGrid();
+      if (reduce) drawStatic();
+    });
+  });
+
+  buildGrid();
+  if (reduce) drawStatic(); else requestAnimationFrame(frame);
+})();
+</script>

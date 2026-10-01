@@ -1,0 +1,10 @@
+# Never ship local secrets or environments to Railway — service variables are
+# the only config source in production.
+.env
+.env.*
+venv/
+.venv-sim/
+__pycache__/
+**/__pycache__/
+*.pyc
+scripts/turf_replay_template.html

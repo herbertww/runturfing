@@ -1,0 +1,7 @@
+# Not part of the site. The assets directory is the repo folder itself, so the
+# deploy config and the notes would otherwise be served at /wrangler.jsonc.
+wrangler.jsonc
+README.md
+.assetsignore
+# Wrangler's local state, created next to the config. Never part of the site.
+.wrangler

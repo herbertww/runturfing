@@ -1,0 +1,601 @@
+<title>Runturfing — turf ownership replay</title>
+<style>
+  /* Tokens lifted from Android/src/utils/theme.ts (NEO). This is a tool for
+     looking at the game's own map, so it wears the game's own system: ink
+     borders, hard offset shadows, zero radius, warm paper ground. */
+  :root {
+    --paper: #FBFBF9;
+    --paper-alt: #F3F1EA;
+    --card: #FFFFFF;
+    --ink: #1C293C;
+    --ink-soft: #5A6577;
+    --hard: #111111;
+    --rule: #1C293C;
+    --yellow: #FDC800;
+    --holder: #432DD7;
+    --challenger: #D97706;
+    --contested: #DC2626;
+    --good: #16A34A;
+    --grid: rgba(28, 41, 60, 0.10);
+    --shadow: 4px 4px 0 var(--hard);
+    --shadow-lg: 6px 6px 0 var(--hard);
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+    --sans: ui-sans-serif, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #12161F;
+      --paper-alt: #1A212D;
+      --card: #1A212D;
+      --ink: #ECEAE3;
+      --ink-soft: #98A2B3;
+      --hard: #000000;
+      --rule: #3A465A;
+      --holder: #8B7BFF;
+      --challenger: #F0A93B;
+      --contested: #FF6B6B;
+      --good: #4ADE80;
+      --grid: rgba(236, 234, 227, 0.10);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #12161F;
+    --paper-alt: #1A212D;
+    --card: #1A212D;
+    --ink: #ECEAE3;
+    --ink-soft: #98A2B3;
+    --hard: #000000;
+    --rule: #3A465A;
+    --holder: #8B7BFF;
+    --challenger: #F0A93B;
+    --contested: #FF6B6B;
+    --good: #4ADE80;
+    --grid: rgba(236, 234, 227, 0.10);
+  }
+
+  :root[data-theme="light"] {
+    --paper: #FBFBF9;
+    --paper-alt: #F3F1EA;
+    --card: #FFFFFF;
+    --ink: #1C293C;
+    --ink-soft: #5A6577;
+    --hard: #111111;
+    --rule: #1C293C;
+    --holder: #432DD7;
+    --challenger: #D97706;
+    --contested: #DC2626;
+    --good: #16A34A;
+    --grid: rgba(28, 41, 60, 0.10);
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 20px 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  /* ── masthead ─────────────────────────────────────────────────────── */
+
+  .masthead { display: flex; flex-direction: column; gap: 10px; }
+
+  .eyebrow {
+    align-self: flex-start;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    padding: 4px 9px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 900;
+    letter-spacing: -0.8px;
+    line-height: 1.05;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .standfirst {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+
+  /* ── controls ─────────────────────────────────────────────────────── */
+
+  .console {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    background: var(--card);
+    border: 3px solid var(--rule);
+    box-shadow: var(--shadow);
+    padding: 14px 16px;
+  }
+
+  button {
+    font-family: var(--sans);
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    font-size: 13px;
+    border: 3px solid var(--rule);
+    background: var(--card);
+    color: var(--ink);
+    padding: 9px 14px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform 90ms ease, box-shadow 90ms ease;
+  }
+
+  button:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--hard); }
+  button:active { transform: translate(4px, 4px); box-shadow: none; }
+  button:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+
+  #play { background: var(--yellow); color: #1C293C; min-width: 108px; }
+
+  .day-readout {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+  }
+
+  .scrub { flex: 1 1 260px; display: flex; align-items: center; gap: 12px; min-width: 220px; }
+
+  input[type="range"] {
+    flex: 1;
+    appearance: none;
+    height: 14px;
+    background: var(--paper-alt);
+    border: 3px solid var(--rule);
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 26px;
+    margin-top: -3px;
+    background: var(--ink);
+    border: 3px solid var(--rule);
+    cursor: grab;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 26px;
+    background: var(--ink);
+    border: 3px solid var(--rule);
+    border-radius: 0;
+    cursor: grab;
+  }
+
+  input[type="range"]:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+
+  /* ── the two boards ───────────────────────────────────────────────── */
+
+  .boards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 780px) { .boards { grid-template-columns: 1fr; } }
+
+  .board {
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border: 3px solid var(--rule);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .board-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 3px solid var(--rule);
+    background: var(--paper-alt);
+  }
+
+  .board-title { font-size: 14px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; }
+  .board-sub { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); text-align: right; }
+
+  .board svg { display: block; width: 100%; height: auto; background: var(--paper); }
+
+  .tally { display: flex; border-top: 3px solid var(--rule); }
+
+  .tally-cell {
+    flex: 1;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .tally-cell + .tally-cell { border-left: 3px solid var(--rule); }
+
+  .tally-num {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .tally-label { font-size: 10px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; color: var(--ink-soft); }
+
+  /* ── contested-cell duel bars ─────────────────────────────────────── */
+
+  .duel { padding: 12px 14px; border-top: 3px solid var(--rule); display: flex; flex-direction: column; gap: 8px; }
+  .duel-title { font-size: 10px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; color: var(--ink-soft); }
+  .bar-row { display: grid; grid-template-columns: 68px 1fr 58px; align-items: center; gap: 8px; }
+  .bar-name { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+  .bar-track { height: 15px; border: 2px solid var(--rule); background: var(--paper-alt); position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0; transition: width 160ms linear; }
+  .bar-num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 12px; text-align: right; }
+
+  .threshold-mark { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); opacity: 0.55; }
+
+  /* ── legend + notes ───────────────────────────────────────────────── */
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    padding: 14px 16px;
+    background: var(--card);
+    border: 3px solid var(--rule);
+    box-shadow: var(--shadow);
+  }
+
+  .key { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .swatch { width: 20px; height: 15px; border: 2px solid var(--rule); flex: none; }
+
+  .verdict {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 780px) { .verdict { grid-template-columns: 1fr; } }
+
+  .note {
+    border-left: 6px solid var(--yellow);
+    background: var(--paper-alt);
+    padding: 12px 16px;
+  }
+
+  .note h3 { margin: 0 0 4px; font-size: 13px; font-weight: 900; letter-spacing: 0.4px; text-transform: uppercase; }
+  .note p { margin: 0; font-size: 14px; color: var(--ink-soft); }
+
+  .footnote { font-size: 12.5px; color: var(--ink-soft); max-width: 70ch; margin: 0; }
+  code { font-family: var(--mono); font-size: 0.92em; background: var(--paper-alt); padding: 1px 4px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <span class="eyebrow">TURF SIMULATOR · 30 DAYS</span>
+    <h1>Two runners, one shared corridor</h1>
+    <p class="standfirst">
+      Both boards replay the identical schedule over the identical routes. The
+      holder runs from day 1. The challenger joins on day 9 and runs twice the
+      distance. The only thing that differs between the two boards is the
+      scoring model.
+    </p>
+  </header>
+
+  <div class="console">
+    <button id="play" type="button">Play</button>
+    <div class="scrub">
+      <input id="scrub" type="range" min="1" max="30" value="1" step="1" aria-label="Day" />
+      <span class="day-readout" id="dayText">DAY 01 / 30</span>
+    </div>
+    <button id="reset" type="button">Restart</button>
+  </div>
+
+  <div class="boards" id="boards"></div>
+
+  <div class="legend">
+    <span class="key"><span class="swatch" style="background: var(--holder)"></span> Holder leads</span>
+    <span class="key"><span class="swatch" style="background: var(--challenger)"></span> Challenger leads</span>
+    <span class="key"><span class="swatch" style="background: var(--paper-alt); border-width: 4px"></span> Thick border = owned outright</span>
+    <span class="key"><span class="swatch" style="background: var(--paper-alt); border-color: var(--contested); border-style: dashed"></span> Contested</span>
+    <span class="key">Fill strength tracks influence score.</span>
+  </div>
+
+  <div class="verdict" id="verdict"></div>
+
+  <p class="footnote" id="method"></p>
+</div>
+
+<script>
+  const DATA = /*__TURF_DATA__*/ null;
+
+  const RUNNERS = { holder: 'Holder', challenger: 'Challenger' };
+  const MODEL_ORDER = ['today', 'proposed'];
+  const MODEL_NOTE = {
+    today: 'Shipped scoring. <code>MAX_SCORE_PER_RUN = 30</code> caps a cell at 300 m, and an r9 cell is about 400 m across, so both runners bank the identical amount no matter how far they run. The 1.25× defense bonus then compounds for whoever got there first.',
+    proposed: 'Per-run cap raised to 100 so distance inside a cell counts again, plus a 600-point soft ceiling. The leader gains less per run the further ahead they are, so the shared corridor stays live.',
+  };
+
+  // ── projection ────────────────────────────────────────────────────────
+  const VIEW_W = 520, VIEW_H = 460, PAD = 26;
+
+  const allLatLng = [];
+  for (const ring of Object.values(DATA.cells)) allLatLng.push(...ring);
+  for (const line of Object.values(DATA.routes)) allLatLng.push(...line);
+
+  const lats = allLatLng.map((p) => p[0]);
+  const lngs = allLatLng.map((p) => p[1]);
+  const midLat = (Math.min(...lats) + Math.max(...lats)) / 2;
+  const lngScale = Math.cos((midLat * Math.PI) / 180);
+
+  const xs = lngs.map((l) => l * lngScale);
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const minY = Math.min(...lats), maxY = Math.max(...lats);
+  const span = Math.max(maxX - minX, maxY - minY);
+  const scale = (Math.min(VIEW_W, VIEW_H) - PAD * 2) / span;
+
+  const project = ([lat, lng]) => [
+    PAD + (lng * lngScale - minX) * scale + (VIEW_W - PAD * 2 - (maxX - minX) * scale) / 2,
+    // Flip: latitude grows north, SVG y grows down.
+    VIEW_H - PAD - (lat - minY) * scale - (VIEW_H - PAD * 2 - (maxY - minY) * scale) / 2,
+  ];
+
+  const toPath = (ring) => ring.map(project).map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+
+  // ── board construction ────────────────────────────────────────────────
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const el = (name, attrs) => {
+    const node = document.createElementNS(SVG_NS, name);
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+    return node;
+  };
+
+  const boards = {};
+  const boardsRoot = document.getElementById('boards');
+
+  for (const key of MODEL_ORDER) {
+    const model = DATA.models[key];
+    const p = model.params;
+
+    const box = document.createElement('section');
+    box.className = 'board';
+    box.innerHTML = `
+      <div class="board-head">
+        <span class="board-title">${key === 'today' ? 'Shipped today' : 'Proposed'}</span>
+        <span class="board-sub">cap ${p.maxScorePerRun} · ceiling ${p.scoreCeiling || 'off'}<br>threshold ${p.ownershipThreshold} · decay ${p.dailyDecayRate}</span>
+      </div>`;
+
+    const svg = el('svg', { viewBox: `0 0 ${VIEW_W} ${VIEW_H}`, role: 'img' });
+    svg.setAttribute('aria-label', `Territory map, ${model.label}`);
+
+    // Routes sit under the cells: they are context, not the subject.
+    for (const [runner, line] of Object.entries(DATA.routes)) {
+      svg.appendChild(el('polyline', {
+        points: toPath(line),
+        fill: 'none',
+        stroke: `var(--${runner})`,
+        'stroke-width': 2,
+        'stroke-dasharray': runner === 'challenger' ? '7 5' : 'none',
+        opacity: 0.5,
+        'stroke-linecap': 'round',
+      }));
+    }
+
+    const shapes = {};
+    for (const [cellId, ring] of Object.entries(DATA.cells)) {
+      const poly = el('polygon', {
+        points: toPath(ring),
+        fill: 'transparent',
+        stroke: 'var(--grid)',
+        'stroke-width': 1.5,
+        'stroke-linejoin': 'round',
+      });
+      shapes[cellId] = poly;
+      svg.appendChild(poly);
+    }
+
+    box.appendChild(svg);
+
+    const tally = document.createElement('div');
+    tally.className = 'tally';
+    tally.innerHTML = Object.keys(RUNNERS).map((r) => `
+      <div class="tally-cell">
+        <span class="tally-num" style="color: var(--${r})" data-tally="${r}">0</span>
+        <span class="tally-label">${RUNNERS[r]} owns</span>
+      </div>`).join('') + `
+      <div class="tally-cell">
+        <span class="tally-num" style="color: var(--contested)" data-tally="contested">0</span>
+        <span class="tally-label">Contested</span>
+      </div>`;
+    box.appendChild(tally);
+
+    const duel = document.createElement('div');
+    duel.className = 'duel';
+    duel.innerHTML = `
+      <span class="duel-title">Most contested cell — influence score</span>
+      ${Object.keys(RUNNERS).map((r) => `
+        <div class="bar-row">
+          <span class="bar-name" style="color: var(--${r})">${RUNNERS[r]}</span>
+          <span class="bar-track"><span class="bar-fill" style="background: var(--${r})" data-bar="${r}"></span><span class="threshold-mark" data-mark="${r}"></span></span>
+          <span class="bar-num" data-score="${r}">0</span>
+        </div>`).join('')}`;
+    box.appendChild(duel);
+
+    boardsRoot.appendChild(box);
+    boards[key] = { box, shapes, model };
+  }
+
+  // The cell both runners put the most into — the one the question is about.
+  const probe = (() => {
+    const shared = DATA.meta.sharedCells;
+    const last = DATA.models.today.frames[DATA.models.today.frames.length - 1].cells;
+    let best = shared[0], bestScore = -1;
+    for (const id of shared) {
+      const entry = last[id];
+      if (!entry) continue;
+      const total = Object.values(entry.runners).reduce((sum, r) => sum + r.score, 0);
+      if (total > bestScore) { best = id; bestScore = total; }
+    }
+    return best;
+  })();
+
+  // ── render one day ────────────────────────────────────────────────────
+
+  // One scale across both boards, or the bars would lie about the comparison.
+  // Derived from the data so a rerun with different parameters cannot clip.
+  const BAR_MAX = (() => {
+    let peak = 0;
+    for (const key of MODEL_ORDER) {
+      for (const frame of DATA.models[key].frames) {
+        const entry = frame.cells[probe];
+        if (!entry) continue;
+        for (const stat of Object.values(entry.runners)) peak = Math.max(peak, stat.score);
+      }
+    }
+    return Math.ceil(peak / 100) * 100;
+  })();
+
+  function render(dayIndex) {
+    for (const key of MODEL_ORDER) {
+      const { shapes, model, box } = boards[key];
+      const frame = model.frames[dayIndex];
+      const threshold = model.params.ownershipThreshold;
+      const delta = model.params.contestedDelta;
+      const counts = { holder: 0, challenger: 0, contested: 0 };
+
+      for (const [cellId, poly] of Object.entries(shapes)) {
+        const entry = frame.cells[cellId];
+        if (!entry) {
+          poly.setAttribute('fill', 'transparent');
+          poly.setAttribute('stroke', 'var(--grid)');
+          poly.setAttribute('stroke-width', 1.5);
+          poly.setAttribute('stroke-dasharray', 'none');
+          continue;
+        }
+
+        const ranked = Object.entries(entry.runners).sort((a, b) => b[1].score - a[1].score);
+        const [leadName, lead] = ranked[0];
+        const second = ranked[1] ? ranked[1][1].score : 0;
+        const owned = entry.owner !== null;
+        const contested = ranked.length > 1 && lead.score >= threshold && lead.score - second < delta;
+
+        if (owned) counts[entry.owner] += 1;
+        if (contested) counts.contested += 1;
+
+        const strength = Math.min(1, lead.score / (threshold * 4));
+        poly.setAttribute('fill', `var(--${leadName})`);
+        poly.setAttribute('fill-opacity', (0.10 + 0.72 * strength).toFixed(3));
+        poly.setAttribute('stroke', contested ? 'var(--contested)' : owned ? 'var(--rule)' : 'var(--grid)');
+        poly.setAttribute('stroke-width', contested ? 3 : owned ? 3.5 : 1.5);
+        poly.setAttribute('stroke-dasharray', contested ? '6 4' : 'none');
+      }
+
+      box.querySelector('[data-tally="contested"]').textContent = counts.contested;
+
+      for (const runner of Object.keys(RUNNERS)) {
+        box.querySelector(`[data-tally="${runner}"]`).textContent = counts[runner];
+
+        const stat = frame.cells[probe] && frame.cells[probe].runners[runner];
+        const score = stat ? stat.score : 0;
+        box.querySelector(`[data-bar="${runner}"]`).style.width =
+          `${Math.min(100, (score / BAR_MAX) * 100).toFixed(1)}%`;
+        box.querySelector(`[data-score="${runner}"]`).textContent = score.toFixed(0);
+        box.querySelector(`[data-mark="${runner}"]`).style.left = `${(threshold / BAR_MAX) * 100}%`;
+      }
+    }
+
+    document.getElementById('dayText').textContent =
+      `DAY ${String(dayIndex + 1).padStart(2, '0')} / ${DATA.meta.days}`;
+  }
+
+  // ── playback ──────────────────────────────────────────────────────────
+  const scrub = document.getElementById('scrub');
+  const playBtn = document.getElementById('play');
+  const resetBtn = document.getElementById('reset');
+
+  scrub.max = DATA.meta.days;
+  let day = 0;
+  let timer = null;
+
+  function setDay(index) {
+    day = Math.max(0, Math.min(DATA.meta.days - 1, index));
+    scrub.value = day + 1;
+    render(day);
+  }
+
+  function stop() {
+    clearInterval(timer);
+    timer = null;
+    playBtn.textContent = 'Play';
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (timer) { stop(); return; }
+    if (day >= DATA.meta.days - 1) setDay(0);
+    playBtn.textContent = 'Pause';
+    timer = setInterval(() => {
+      if (day >= DATA.meta.days - 1) { stop(); return; }
+      setDay(day + 1);
+    }, 420);
+  });
+
+  resetBtn.addEventListener('click', () => { stop(); setDay(0); });
+  scrub.addEventListener('input', () => { stop(); setDay(Number(scrub.value) - 1); });
+
+  // ── verdict copy, computed from the data rather than asserted ─────────
+  const verdict = document.getElementById('verdict');
+  for (const key of MODEL_ORDER) {
+    const model = DATA.models[key];
+    let flipDay = null;
+    model.frames.forEach((frame, i) => {
+      if (flipDay === null && frame.cells[probe] && frame.cells[probe].owner === 'challenger') {
+        flipDay = i + 1;
+      }
+    });
+
+    const note = document.createElement('div');
+    note.className = 'note';
+    note.innerHTML = `
+      <h3>${key === 'today' ? 'Shipped today' : 'Proposed'}</h3>
+      <p>${MODEL_NOTE[key]} On the shared corridor the challenger
+      ${flipDay
+        ? `takes the lead cell on day ${flipDay}, ${flipDay - DATA.meta.headStart} days after starting.`
+        : `never takes the lead cell, across all ${DATA.meta.days} days.`}</p>`;
+    verdict.appendChild(note);
+  }
+
+  document.getElementById('method').innerHTML =
+    `Generated by <code>Backend/scripts/simulate_turf.py export</code>, which drives the same
+     scoring functions the API uses. ${Object.keys(DATA.cells).length} H3 r9 cells,
+     ${DATA.meta.sharedCells.length} of them run by both. Challenger volume
+     ${DATA.meta.challengerVolume}×, starting day ${DATA.meta.headStart + 1}. Cell shapes are
+     real H3 boundaries, not decoration.`;
+
+  setDay(0);
+</script>

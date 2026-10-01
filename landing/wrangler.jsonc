@@ -1,0 +1,18 @@
+{
+  // Assets-only Worker: no `main`, so Cloudflare serves the directory directly
+  // and there is no script to cold-start. The site is static files.
+  "name": "runturfing",
+  // Pinned because the Cloudflare login has two accounts, and without this
+  // `wrangler deploy` stops to ask which one — which a non-interactive deploy
+  // cannot answer. This is the personal account that owns herbert-ww.workers.dev.
+  "account_id": "e712f0dca6bc8fefa955d7f96f7b0d21",
+  "compatibility_date": "2026-08-07",
+  "assets": {
+    "directory": ".",
+    // Serve the 404 as a plain miss rather than rewriting to index.html. This
+    // is not a single-page app; every route is a real file, and SPA handling
+    // would return 200 for typos.
+    "not_found_handling": "none"
+  },
+  "observability": { "enabled": true }
+}

@@ -1,0 +1,23 @@
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+sqlalchemy[asyncio]==2.0.30
+asyncpg==0.29.0
+pydantic==2.7.1
+pydantic-settings==2.2.1
+email-validator==2.1.1
+PyJWT[crypto]==2.8.0
+passlib[bcrypt]==1.7.4
+# passlib 1.7.4 detects the bcrypt backend by reading bcrypt.__about__, which
+# bcrypt removed in 4.1. Unpinned, the build pulled bcrypt 5.x and every
+# password hash raised MissingBackendError — every register/login 500'd.
+bcrypt==4.0.1
+python-multipart==0.0.9
+stripe==9.9.0
+h3==4.5.0
+httpx==0.27.0
+python-dotenv==1.0.1
+alembic==1.13.1
+psycopg2-binary==2.9.9
+geojson==3.1.0
+shapely==2.0.4
+pyproj==3.6.1
